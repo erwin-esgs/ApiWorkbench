@@ -1,0 +1,32 @@
+﻿[
+  {
+    "WorkflowName": "BloodPressure",
+    "Rules": [
+      {
+        "RuleName": "BP.Normal",
+        "Expression": "( Sistolik <= 120 && Sistolik >= 90 ) && ( Diastolik <= 80 && Diastolik >= 60 )",
+        "SuccessEvent": "Normal"
+      },
+      {
+        "RuleName": "BP.HypoTension",
+        "Expression": "Sistolik < 90 && Diastolik < 60",
+        "SuccessEvent": "Hypotension"
+      },
+      {
+        "RuleName": "BP.HyperTension",
+        "Expression": "Sistolik > 120 && Diastolik > 80",
+        "SuccessEvent": "Hypertension"
+      },
+      {
+        "RuleName": "BP.PreHyperTension",
+        "Expression": "Sistolik > 120 || Diastolik > 80",
+        "SuccessEvent": "Prehypertension"
+      },
+      {
+        "RuleName": "BP.PreHypoTension",
+        "Expression": "Sistolik < 90 || Diastolik < 60",
+        "SuccessEvent": "Prehypotension"
+      }
+    ]
+  }
+] 
