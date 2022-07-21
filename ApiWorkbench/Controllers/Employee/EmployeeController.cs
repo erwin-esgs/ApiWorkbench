@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MediatR;
 using Newtonsoft.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 using ApiWorkbench.CQRS.Command.Employee.Create;
 using ApiWorkbench.CQRS.Command.Employee.Edit;
 using ApiWorkbench.CQRS.Command.Employee.Delete;
 using ApiWorkbench.CQRS.Query.Employee.Detail;
 using ApiWorkbench.CQRS.Query.Employee.Show;
+using ApiWorkbench.CQRS.Command.Employee;
 
 
 using FluentValidation;
@@ -49,24 +52,30 @@ namespace ApiWorkbench.Controllers.Employee
         {
             Console.WriteLine("ADD");
             return Ok(await _mediator.Send(request));
+            //Console.WriteLine(JsonConvert.SerializeObject(request));
+            //return Ok();
         }
 
         [HttpPatch]
         [Route("{_id}")]
         public async Task<IActionResult> edit(int _id ,
             //[FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)]  EmployeeEditCommand? request=default
-            [FromBody] EmployeeEditCommand request =default
-            //dynamic request
+            //[FromBody] string request,
+            [FromBody] object request
             )
         {
+            dynamic data = JsonConvert.DeserializeObject<dynamic>(request.ToString());
+            //Console.WriteLine(data);
+
             Console.WriteLine("EDIT");
-            Console.WriteLine(request);
-            //EmployeeEditCommand employeeEditCommand = new();
-            //employeeEditCommand.Id = (int)request["Id"];
-            //employeeEditCommand.FirstName = request["FirstName"];
-            //employeeEditCommand.LastName = request["LastName"];
-            //Console.WriteLine(employeeEditCommand);
-            return Ok(await _mediator.Send(request));
+            EmployeeEditCommand employeeEditCommand = new();
+            employeeEditCommand.Id = _id;
+            employeeEditCommand.FirstName = (string)data["FirstName"];
+            employeeEditCommand.LastName = (string)data["LastName"];
+
+            Console.WriteLine(JsonConvert.SerializeObject(employeeEditCommand) );
+
+            return Ok(await _mediator.Send(employeeEditCommand));
             //return Ok();
         }
 

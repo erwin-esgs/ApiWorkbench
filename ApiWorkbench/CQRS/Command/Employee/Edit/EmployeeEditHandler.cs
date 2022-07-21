@@ -38,8 +38,8 @@ namespace ApiWorkbench.CQRS.Command.Employee.Edit
                 var result = _dbContext.Employees.FirstOrDefault(x => x.Id == request.Id);
                 if (result != null)
                 {
-                    if (request.FirstName != "" ) result.FirstName = request.FirstName;
-                    if (request.LastName != "" ) result.LastName = request.LastName;
+                    if (request.FirstName != null) result.FirstName = request.FirstName;
+                    if (request.LastName != null ) result.LastName = request.LastName;
                     
                     Console.WriteLine(_dbContext.SaveChanges());
                     response.Data = _dbContext.Employees.ToList();
