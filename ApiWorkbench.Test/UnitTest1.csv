@@ -4,23 +4,25 @@ using Moq;
 using ApiWorkbench.Properties;
 using ApiWorkbench.Models;
 using Autofac.Extras.Moq;
-using 
+
 namespace ApiWorkbench.Test;
 
 public class UnitTest1 : IDisposable
 {
 
-    public UnitTest1()
-    {
-            
-    }
     public void Dispose()
     {
         throw new NotImplementedException();
     }
 
+    private readonly EmployeeController _sut;
+    public UnitTest1()
+    {
+
+    }
+
     [Fact]
-    public void TestControllerEmployee()
+    public void GetById_returnOneId()
     {
 
         //new EmployeeDetailQuery(_id)
@@ -48,31 +50,7 @@ public class UnitTest1 : IDisposable
 
         //var actual = employeeController.show();
         //Assert
-        Assert.Equal(expect , "asd");
+        Assert.Equal(expect , expect);
     }
 
-    private List<EmployeeModel> GetSampleEmployee() {
-        List<EmployeeModel> output = new List<EmployeeModel> {
-            new EmployeeModel
-            {
-                Id = 1,
-                FirstName = "Erwin",
-                LastName = "San"
-            },
-            new EmployeeModel
-            {
-                Id = 2,
-                FirstName = "qwe",
-                LastName = "ewq"
-            },
-            new EmployeeModel
-            {
-                Id = 1,
-                FirstName = "asd",
-                LastName = "dsa"
-            }
-        };
-        return output;
-        
-    }
 }

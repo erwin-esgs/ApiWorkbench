@@ -25,6 +25,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Autofac.Extras.Moq" Version="6.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.7" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,5 +35,6 @@
     <None Remove="Moq" />
     <None Remove="xunit.runner.console" />
     <None Remove="Autofac.Extras.Moq" />
+    <None Remove="Microsoft.EntityFrameworkCore.InMemory" />
   </ItemGroup>
 </Project>

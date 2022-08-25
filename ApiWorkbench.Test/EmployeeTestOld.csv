@@ -1,0 +1,87 @@
+﻿using System;
+using Xunit;
+using Moq;
+using ApiWorkbench.CQRS.Command.Employee.Create;
+using ApiWorkbench.CQRS.Command.Employee.Delete;
+using ApiWorkbench.CQRS.Command.Employee.Edit;
+using ApiWorkbench.CQRS.Query.Employee.Detail;
+using ApiWorkbench.CQRS.Query.Employee.Show;
+using ApiWorkbench.CQRS.DataAccess;
+using ApiWorkbench.CQRS.Service;
+namespace ApiWorkbench.Test
+{
+    public class EmployeeTest : IDisposable
+    {
+        //private readonly EmployeeService _sut;
+        //private readonly Mock<IEmployeeService> _employeeService = new Mock<IEmployeeService>();
+
+        public EmployeeTest()
+        {
+            //_sut = new EmployeeService(_employeeService.Object);
+        }
+
+        [Fact]
+        public async Task Detail_Test() {
+
+            //var EmployeeAddMock = new Mock<EmployeeAddCommand>();
+            //var EmployeeEditMock = new Mock<EmployeeEditCommand>();
+            //var EmployeeDeleteMock = new Mock<EmployeeDeleteCommand>();
+            //var EmployeeDetailMock = new Mock<EmployeeDetailQuery>();
+            //Console.WriteLine(EmployeeDetailMock.Object.Id);
+
+            var employeeDataAccess = new Mock<IEmployeeDataAccess >();
+            //employeeDataAccess.Setup(p => p.GetEmployee(1));
+            //employeeDataAccess.Setup(p => p.AddEmployee(EmployeeAddMock.Object));
+
+            var employeeService = new EmployeeService(employeeDataAccess.Object);
+            var result = employeeService.GetEmployee(1);
+
+            Assert.Equal(1, result.Id);
+        }
+        [Fact]
+        public async Task EmployeeAdd_Test()
+        {
+
+            //var EmployeeAddMock = new Mock<EmployeeAddCommand>();
+            EmployeeAddCommand testRequest = new EmployeeAddCommand();
+            testRequest.FirstName = "asd";
+            testRequest.LastName = "asd";
+
+            var employeeDataAccess = new Mock<IEmployeeDataAccess>();
+            var employeeService = new EmployeeService(employeeDataAccess.Object);
+            
+            var result = await employeeService.AddEmployee(testRequest);
+            Assert.True(result, result.ToString());
+            //Assert.Equal(true, result);
+        }
+
+        [Fact]
+        public async Task EmployeeEdit_Test()
+        {
+
+            var EmployeeEditMock = new Mock<EmployeeEditCommand>();
+
+            var employeeDataAccess = new Mock<IEmployeeDataAccess>();
+
+            var employeeService = new EmployeeService(employeeDataAccess.Object);
+            var result = await employeeService.EditEmployee(EmployeeEditMock.Object);
+
+            Assert.True(result, "NOT TRUE");
+        }
+
+
+
+        public void Dispose()
+        {
+            // Do "global" teardown here; Only called once.
+        }
+    }
+
+    public class DummyTests : IClassFixture<EmployeeTest>
+    {
+        public DummyTests(EmployeeTest data)
+        {
+        }
+    }
+}
+

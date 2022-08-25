@@ -2,25 +2,28 @@
 using ApiWorkbench.Models;
 using FluentValidation;
 using ApiWorkbench.Properties;
+using ApiWorkbench.CQRS.Service;
 
 namespace ApiWorkbench.CQRS.Command.Employee.Create
 {
     public class EmployeeAddHandler : IRequestHandler<EmployeeAddCommand, EmployeeListResponse>
     {
         //appdbcontext here
-        private readonly AppDbContext _dbContext;
+        //private readonly AppDbContext _dbContext;
         private readonly IEnumerable<IValidator<EmployeeAddCommand>> _validators;
-
+        private readonly IEmployeeService _employeeService;
 
         public EmployeeAddHandler(
-            AppDbContext dbContext,
-            IEnumerable<IValidator<EmployeeAddCommand>> validators
+            //AppDbContext dbContext,
+            IEnumerable<IValidator<EmployeeAddCommand>> validators,
+            IEmployeeService employeeService
             )
         {
-            _dbContext = dbContext;
+            //_dbContext = dbContext;
             _validators = validators;
+            _employeeService = employeeService;
         }
-        public Task<EmployeeListResponse> Handle(EmployeeAddCommand request, CancellationToken cancellationToken)
+        public async Task<EmployeeListResponse> Handle(EmployeeAddCommand request, CancellationToken cancellationToken)
         {
             Console.WriteLine("Handler");
             EmployeeListResponse response = new();
@@ -31,19 +34,24 @@ namespace ApiWorkbench.CQRS.Command.Employee.Create
             //Console.WriteLine(result.IsValid);
             if (validate.IsValid)
             {
-                EmployeeModel model = new();
-                model.FirstName = request.FirstName;
-                model.LastName = request.LastName;
 
-                Console.WriteLine(_dbContext.Employees.Add(model));
-                Console.WriteLine(_dbContext.SaveChanges());
+                var result = await _employeeService.AddEmployee(request);
+                if (result == true)
+                {
+                    response.Data = await _employeeService.ShowEmployee();
+                }
+                //EmployeeModel model = new();
+                //model.FirstName = request.FirstName;
+                //model.LastName = request.LastName;
 
+                //Console.WriteLine(_dbContext.Employees.Add(model));
+                //Console.WriteLine(_dbContext.SaveChanges());
 
-                response.Data = _dbContext.Employees.ToList();
+                //response.Data = _dbContext.Employees.ToList();
             }
 
 
-            return Task.FromResult(response);
+            return response;
         }
     }
 }

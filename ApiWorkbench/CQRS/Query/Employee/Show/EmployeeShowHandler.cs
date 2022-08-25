@@ -2,6 +2,7 @@
 using MediatR;
 using ApiWorkbench.Properties;
 using ApiWorkbench.CQRS.Command.Employee;
+using ApiWorkbench.CQRS.Service;
 namespace ApiWorkbench.CQRS.Query.Employee.Show
 {
 
@@ -9,19 +10,21 @@ namespace ApiWorkbench.CQRS.Query.Employee.Show
     public class EmployeeShowHandler : IRequestHandler<EmployeeShowQuery, EmployeeListResponse>
     {
         //appdbcontext here
-        private readonly AppDbContext _dbContext;
+        //private readonly AppDbContext _dbContext;
         private readonly IEnumerable<IValidator<EmployeeShowQuery>> _validators;
-
+        private readonly IEmployeeService _employeeService;
 
         public EmployeeShowHandler(
-            AppDbContext dbContext,
-            IEnumerable<IValidator<EmployeeShowQuery>> validators
+            //AppDbContext dbContext,
+            IEnumerable<IValidator<EmployeeShowQuery>> validators,
+            IEmployeeService employeeService
             )
         {
-            _dbContext = dbContext;
+            //_dbContext = dbContext;
             _validators = validators;
+            _employeeService = employeeService;
         }
-        public  Task<EmployeeListResponse> Handle(EmployeeShowQuery request, CancellationToken cancellationToken)
+        public async Task<EmployeeListResponse> Handle(EmployeeShowQuery request, CancellationToken cancellationToken)
         {
             Console.WriteLine("Handler");
             EmployeeListResponse response = new();
@@ -31,13 +34,13 @@ namespace ApiWorkbench.CQRS.Query.Employee.Show
             Console.WriteLine(validator);
             Console.WriteLine(validate.IsValid);
             if (validate.IsValid) {
-                var result = _dbContext.Employees.ToList();
+                var result = await _employeeService.ShowEmployee();
                 if (result != null) {
                     response.Data = result;
                 }
             }
             
-            return Task.FromResult(response);
+            return response;
         }
     }
 

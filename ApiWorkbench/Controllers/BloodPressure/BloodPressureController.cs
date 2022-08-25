@@ -1,12 +1,14 @@
 ﻿using System;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 using ApiWorkbench.CQRS.Command.BloodPressure.Get;
 namespace ApiWorkbench.Controllers.BloodPressure
 {
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("bp")]
     public class BloodPressureController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -16,12 +18,13 @@ namespace ApiWorkbench.Controllers.BloodPressure
         {
             _mediator = mediator;
         }
-
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> add([FromBody] BloodPressureCommand request)
+        public async Task<IActionResult> add([FromBody] object request)
         {
+            dynamic data = JsonConvert.DeserializeObject<dynamic>(request.ToString());
             Console.WriteLine("CALCULATE");
-            return Ok(await _mediator.Send(request));
+            return Ok(data);
         }
     }
 }
